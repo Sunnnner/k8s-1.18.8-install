@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: kws
+  labels:
+    app: nginx
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: harbor.knd.com/public/nginx:v1.7.9
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d/minio.knd.com.conf
+          subPath: minio.knd.com.conf
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: nginx-config
+            items:
+            - key: minio.knd.com.conf
+              path: minio.knd.com.conf

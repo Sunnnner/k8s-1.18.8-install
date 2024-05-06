@@ -1,0 +1,46 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  labels:
+    name: api
+  name: api
+  namespace: kws
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 7
+  selector:
+    matchLabels:
+      name: api
+  template: 
+    metadata:
+      labels:
+        app: api
+        name: api
+    spec:
+      containers:
+      - name: api
+        image: harbor.knd.com/kws/api:latest
+        imagePullPolicy: IfNotPresent
+        ports: 
+        - containerPort: 8000
+          protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: init-env
+        volumeMounts:
+        - mountPath: /media
+          name: media
+        - mountPath: /static
+          name: static
+      imagePullSecrets:
+      - name: harbor
+      volumes:
+      - nfs:
+          server: 192.168.1.5
+          path: /data/nfs-volume/api/media
+        name: media 
+      - nfs:
+          server: 192.168.1.5
+          path: /data/nfs-volume/api/static
+        name: static 

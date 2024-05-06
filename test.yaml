@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nginx-ds
+spec:
+  selector:
+    matchLables:
+     app: nginx-ds
+  template:
+    metadata:
+      labels:
+        app: nginx-ds
+    spec:
+      containers:
+        - name: my-nginx
+          image: harbor.knd.com/public/nginx:v1.17.9
+          ports:
+            - containerPort: 80

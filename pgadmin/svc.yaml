@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgadmin
+  namespace: kws
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    name: pgadmin
+  selector:
+    app: pgadmin

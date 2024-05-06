@@ -1,0 +1,42 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  labels:
+    name: pgadmin
+  name: pgadmin
+  namespace: kws
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 7
+  selector:
+    matchLabels:
+      name: pgadmin
+  template:
+    metadata:
+      labels:
+        app: pgadmin
+        name: pgadmin
+    spec:
+      containers:
+      - name: pgadmin
+        image: harbor.knd.com/kws/pgadmin:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: pgadmin
+          containerPort: 80
+        env:
+        - name: PGADMIN_DEFAULT_EMAIL
+          value: kws@knd.com.cn
+        - name: PGADMIN_DEFAULT_PASSWORD
+          value: k123456
+        volumeMounts:
+        - mountPath: /var/lib/pgadmin
+          name: data
+      imagePullSecrets:
+      - name: harbor
+      volumes:
+      - nfs:
+          server: 192.168.1.5
+          path: /data/nfs-volume/pgadmin
+        name: data

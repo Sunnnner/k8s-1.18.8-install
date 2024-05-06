@@ -1,0 +1,21 @@
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: nginx-config
+    namespace: kws
+data:
+    minio.knd.com.conf: |
+      upstream minio {
+        server minio:9000;
+      }
+
+
+      server {
+          server_name minio.knd.com;
+          location / {
+              proxy_pass http://minio;
+              proxy_set_header Host   minio:9000;
+              proxy_set_header x-forwarded-for $proxy_add_x_forwarded_for;
+          }
+        }

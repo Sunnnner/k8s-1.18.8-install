@@ -1,0 +1,20 @@
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: minio
+  namespace: kws
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.frontend.passHostHeader: "false"
+    # traefik.frontend.passHostHeader: true
+    # traefik.frontend.passHostHeader: "minio:9000" 
+    # traefik.ingress.kubernetes.io/router.middlewares: kws-minioproxyheader@kubernetescrd
+spec:
+  rules:
+    - host: minio.knd.com
+      http:
+        paths:
+        - path: /
+          backend:
+            serviceName: minio
+            servicePort: 9000

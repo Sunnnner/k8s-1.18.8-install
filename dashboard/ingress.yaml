@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: kubernetes-dashboard-ingress
+  namespace: kube-system
+  annotations:
+    kubernetes.io/ingress.class: traefik                  
+    # traefik.ingress.kubernetes.io/router.tls: "true"
+    # traefik.ingress.kubernetes.io/router.entrypoints: websecure
+spec:
+  # tls:
+  # - hosts:
+  #     - dashboard.knd.com
+  #   secretName: cloud-mydlq-tls
+  rules:
+  - host: dashboard.knd.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          serviceName: kubernetes-dashboard
+          servicePort: 443

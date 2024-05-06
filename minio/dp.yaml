@@ -1,0 +1,56 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  labels:
+    name: minio
+  name: minio
+  namespace: kws
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 7
+  selector:
+    matchLabels:
+      name: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+        name: minio
+    spec:
+      containers:
+      - name: minio
+        image: harbor.knd.com/kws/minio:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9000
+          protocol: TCP
+          name: controller
+        args:
+        - server
+        - /data
+        env:
+        - name: MINIO_ACCESS_KEY
+          value: minio
+        - name: MINIO_SECRET_KEY
+          value: minio123
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /minio/health/ready
+            port: 9000
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        volumeMounts:
+        - mountPath: /data
+          name: data
+      imagePullSecrets:
+      - name: harbor
+      volumes:
+      - nfs:
+          server: 192.168.1.5
+          path: /data/nfs-volume/minio
+        name: data 

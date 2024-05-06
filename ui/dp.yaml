@@ -1,0 +1,39 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  labels:
+    name: ui
+  name: ui
+  namespace: kws
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 7
+  selector:
+    matchLabels:
+      name: ui
+  template:
+    metadata:
+      labels:
+        app: ui
+        name: ui
+    spec:
+      containers:
+      - name: ui
+        image: harbor.knd.com/kws/ui:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: ui
+          containerPort: 80
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /etc/nginx/conf.d
+          name: config
+      imagePullSecrets:
+      - name: harbor
+      volumes:
+      - nfs:
+          server: 192.168.1.5
+          path: /data/nfs-volume/ui/conf.d
+        name: config
+

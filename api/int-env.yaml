@@ -1,0 +1,17 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: init-env
+  namespace: kws
+data:
+  DATABASE_URL: postgres://kws:k123456@postgres/kws
+  DJANGO_DEBUG: "off"
+  MINIO_ACCESS_KEY: minio
+  MINIO_SECRET_KEY: minio123
+  MINIO_URL: "minio:9000"
+  STATIC_MINIO_URL: http://minio.knd.com/static
+  MEDIA_MINIO_URL: http://minio.knd.com/
+  REDIS_URL: redis://redis:6379
+  POSTGRES_USER: kws
+  POSTGRES_PASSWORD: k123456
+  POSTGRES_HOST: postgres

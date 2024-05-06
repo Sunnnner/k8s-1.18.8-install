@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ui
+  namespace: kws
+spec:
+  ports:
+  - name: ui
+    port: 80
+    protocol: TCP
+  selector:
+    app: ui

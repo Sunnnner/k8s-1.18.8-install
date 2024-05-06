@@ -1,0 +1,39 @@
+# # Redirect with domain replacement
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: Middleware
+# metadata:
+#   name: test-redirectregex
+#   namespace: kws
+# spec:
+#   redirectRegex:
+#     regex: ^http://minio.knd.com/(.*)
+#     replacement: http://minio:9000/${1}
+
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: minioproxyheader
+  namespace: kws
+spec:
+  headers:
+    # customRequestHeaders:
+    #   stom-Request-Header: "kws.knd.com"
+    # customRequestHeaders:
+    #   X-Script-Name: "minio:9000" # Adds
+    #   X-Custom-Request-Header: "minio.knd.com" # Removes
+    # accessControlAllowMethods:
+    #   - "GET"
+    #   - "OPTIONS"
+    #   - "PUT"
+    # accessControlAllowOriginList:
+    #   - "http://minio.knd.com"
+    #   - "http://api.knd.com"
+    # accessControlMaxAge: 100
+    # accessControlAllowHeaders:
+    # - "minio:9000"
+    # addVaryHeader: true
+    # allowedHosts:
+    # - "minio.knd.com"
+    hostsProxyHeaders: 
+      - "minio:9000"

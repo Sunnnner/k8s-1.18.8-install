@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    name: postgres
+  name: postgres
+  namespace: kws
+spec:
+  replicas: 1
+  revisionHistoryLimit: 7
+  selector:
+    matchLabels:
+      name: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+        name: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: harbor.knd.com/kws/postgres:9.6-alpine
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+        env:
+        - name: POSTGRES_USER
+          value: kws
+        - name: POSTGRES_PASSWORD
+          value: k123456
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: data
+      imagePullSecrets:
+      - name: harbor
+      volumes:
+      - nfs:
+          server: 192.168.1.5
+          path: /data/nfs-volume/postgres
+        name: data

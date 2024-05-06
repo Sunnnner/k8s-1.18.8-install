@@ -1,0 +1,13 @@
+server {
+    listen       80;
+    server_name  k8s-yaml.knd.com;
+
+    location / {
+        autoindex on;
+        default_type text/plain;
+        root /data/k8s-yaml;
+    }
+}
+
+
+http://minio:9000/static/admin/css/responsive.css?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minio%2F20210325%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210325T052713Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=cf8ecf6e4563915b117fcca6120cdef0156857f165db646f60847c34f81a6a31

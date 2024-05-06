@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: traefik-ingress
+  namespace: kube-system
+  labels:
+    k8s-app: traefik-ingress
+spec:
+  selector:
+    matchLabels:
+      k8s-app: traefik-ingress
+  template:
+    metadata:
+      labels:
+        k8s-app: traefik-ingress
+        name: traefik-ingress
+    spec:
+      serviceAccountName: traefik-ingress-controller
+      terminationGracePeriodSeconds: 30
+      containers:
+      - image: harbor.knd.com/public/traefik:v2.3.6
+        name: traefik-ingress
+        ports:
+        - name: web
+          containerPort: 80
+        securityContext:
+          capabilities:
+            drop:
+            - ALL
+            add:
+            - NET_BIND_SERVICE
+        args:
+        - --api
+        - --api.dashboard=true
+        - --api.insecure=true
+        - --entryPoints.web.address=:80
+        - --providers
+        - --providers.kubernetesIngress.endpoint=https://192.168.1.29:7443
+        - --accesslog
+        - --accesslog.filepath=/var/log/traefik_access.log
+        - --log
+        - --log.level=INFO
+        - --log.filepath=/var/log/traefik.log
+        - --metrics.prometheus
